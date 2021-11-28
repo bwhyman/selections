@@ -4,9 +4,12 @@
 后端源码：https://github.com/bwhyman/mentor-selection
 
 ### update 
+#### 2021.11.27
+添加插件，编译时直接生成gzip压缩文件，减少服务器执行压缩算法的资源消耗  
+
 #### 2021.11.23
 vite重构  
-elment-plus官方将icon的使用方改为引入组件的方式，几天时间就变了    
+elment-plus官方将icon的使用方法改为引入组件的方式，几天时间就变了    
 element-plus打包需在tsconfig.json，添加"skipLibCheck": true属性，推荐以下方式  
 或引入rollup-plugin-external-globals插件，配置vite.config.ts，编译vue/element-plus/xlsx时忽略替换，引入外部CDN节点资源，可减少编译尺寸  
 将外部xlsx在组件中动态引入，避免无需使用的全局引入  

@@ -19,19 +19,14 @@
 </template>
 <script lang="ts" setup>
 import { State } from '@/store'
-import { computed, ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { Lock } from '@element-plus/icons'
 const store = useStore<State>()
 let pwdM = ref({ p1: '', p2: '' })
-let showD = ref(false)
-let resetpassword = computed(() => store.state.showResetPassword)
-if (resetpassword.value) {
-  showD.value = true
-}
-watch(resetpassword, () => {
-  showD.value = store.state.showResetPassword
-})
+
+let showD = ref(true)
+
 let resetPwd = () => {
   if (!(pwdM.value.p1 == pwdM.value.p2)) {
     store.state.exception = '2次输入密码不同'
@@ -40,7 +35,7 @@ let resetPwd = () => {
   store.dispatch('resetpwd', pwdM.value.p1)
   pwdM.value.p1 = ''
   pwdM.value.p2 = ''
-  showD.value = false
+  store.state.showResetPassword = false
 }
 let close = () => {
   store.state.showResetPassword = false

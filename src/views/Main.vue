@@ -33,7 +33,7 @@
 
     <el-button type="danger" :icon="Delete" @click="logout"></el-button>
   </el-dialog>
-  <reset />
+  <reset v-if="resetpassword" />
 </template>
 <script lang="ts" setup>
 import { State } from '@/store'
@@ -42,6 +42,9 @@ import { useStore } from 'vuex'
 import { Setting, Lock, Delete } from '@element-plus/icons'
 const reset = defineAsyncComponent(() => import('./ResetPassword.vue'))
 const store = useStore<State>()
+
+let resetpassword = computed(() => store.state.showResetPassword)
+
 let user = computed(() => store.state.user)
 
 store.dispatch('getInfo')

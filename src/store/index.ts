@@ -23,7 +23,7 @@ const myMutations: MutationTree<State> = {
 }
 
 const myActions: ActionTree<State, State> = {
-  login: async ({ state }, data: User) => {
+  login: async (_, data: User) => {
     const resp = await axios.post('login', data)
     const token = resp.headers.token
     const role = resp.headers.role
@@ -60,11 +60,11 @@ const myActions: ActionTree<State, State> = {
     state.user = resp.data.data.user
     state.startTime = resp.data.data.starttime
   },
-  checkadmin: async ({ state }) => {
+  checkadmin: async () => {
     await axios.get('admin/checkadmin')
   },
   resetpwd: async ({ state }, data) => {
-    const resp = await axios.put(`password/${data}`)
+    await axios.put(`password/${data}`)
     state.showResetPassword = false
   },
 
@@ -73,7 +73,7 @@ const myActions: ActionTree<State, State> = {
     state.teachers = resp.data.data.teachers
   },
   resetuserpwd: async ({ state }, tid) => {
-    const resp = await axios.put(`admin/password/${tid}`)
+    await axios.put(`admin/password/${tid}`)
     state.exception = '重置用户密码'
   },
 
@@ -89,7 +89,7 @@ const myActions: ActionTree<State, State> = {
       .then((resp) => {
         state.user = resp.data.data.user
       })
-      .catch((e) => {
+      .catch(() => {
         dispatch('listteachers')
       })
   },
@@ -106,8 +106,8 @@ const myActions: ActionTree<State, State> = {
   //   state.user = resp.data.data.teacher;
   // },
 
-  addstudents: async ({ state }, students: User[]) => {
-    const resp = await axios.post<ResultVO>('admin/students', students)
+  addstudents: async (_, students: User[]) => {
+    await axios.post<ResultVO>('admin/students', students)
   },
 
   listunselected: async ({ state }) => {
@@ -119,7 +119,7 @@ const myActions: ActionTree<State, State> = {
     state.startTime = resp.data.data.time
   },
   resetuserpassword: async ({ state }, number: string) => {
-    const resp = await axios.put<ResultVO>(`admin/password/${number}`)
+    await axios.put<ResultVO>(`admin/password/${number}`)
     state.exception = '重置用户密码'
   },
   allstudents: async () => {
