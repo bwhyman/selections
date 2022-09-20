@@ -18,9 +18,7 @@ const myState: State = {
   showResetPassword: false,
 }
 
-const myMutations: MutationTree<State> = {
-  serteachers: (state, data: User[]) => (state.teachers = data),
-}
+const myMutations: MutationTree<State> = {}
 
 const myActions: ActionTree<State, State> = {
   login: async (_, data: User) => {
@@ -77,12 +75,11 @@ const myActions: ActionTree<State, State> = {
     state.exception = '重置用户密码'
   },
 
-  addteacher: async ({ commit, state }, user: User) => {
-    const resp = await axios.post<ResultVO>('admin/teachers', user)
+  // addteacher: async ({ state }, user: User) => {
+  //   const resp = await axios.post<ResultVO>('admin/teachers', user)
+  //   state.teachers = resp.data.data.teachers
+  // },
 
-    commit('serteachers', resp.data.data.teachers)
-    state.teachers = resp.data.data.teachers
-  },
   selection: async ({ state, dispatch }, tid: string) => {
     await axios
       .put<ResultVO>(`teachers/${tid}`)
@@ -108,6 +105,11 @@ const myActions: ActionTree<State, State> = {
 
   addstudents: async (_, students: User[]) => {
     await axios.post<ResultVO>('admin/students', students)
+  },
+
+  addteachers: async ({ state }, teachers: User[]) => {
+    const resp = await axios.post<ResultVO>('admin/teachers', teachers)
+    state.teachers = resp.data.data.teachers
   },
 
   listunselected: async ({ state }) => {

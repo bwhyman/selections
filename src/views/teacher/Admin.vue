@@ -1,4 +1,5 @@
 <template>
+  <!-- start time -->
   <el-row>
     <el-col :span="24">
       <el-card style="margin-bottom: 15px">
@@ -23,23 +24,44 @@
       </el-card>
     </el-col>
   </el-row>
+  <!-- read student excel -->
   <el-row>
     <el-col :span="24">
       <el-card style="margin-bottom: 15px">
         读取学生表格：
         <input type="file" @change="readStu" />
-        {{ students[0] }} / {{ students?.length }}
         <el-button
           type="success"
           :icon="Check"
           @click="addStudents"
           :disabled="students.length == 0"
         ></el-button>
+        <br />
+        {{ students[0] }} / {{ students?.length }}
       </el-card>
     </el-col>
   </el-row>
-  <unselected />
+  <!-- read teacher excel -->
   <el-row>
+    <el-col :span="24">
+      <el-card style="margin-bottom: 15px">
+        读取导师表格：
+        <input type="file" @change="readTeacher" />
+        <el-button
+          type="success"
+          :icon="Check"
+          @click="addTeachers"
+          :disabled="teachers.length == 0"
+        ></el-button>
+        <br />
+        {{ teachers[0] }} / {{ teachers?.length }}
+      </el-card>
+    </el-col>
+  </el-row>
+
+  <unselected />
+  <!-- add teacher -->
+  <!-- <el-row>
     <el-col :span="24">
       <el-card style="margin-bottom: 15px">
         <el-form :inline="true" class="demo-form-inline">
@@ -63,7 +85,7 @@
         </el-form>
       </el-card>
     </el-col>
-  </el-row>
+  </el-row> -->
   <el-row>
     <el-col :span="24">
       <el-card style="margin-bottom: 15px">
@@ -91,25 +113,26 @@ import { defineAsyncComponent, ref } from 'vue'
 import { User } from '@/types/type'
 import { State } from '@/store'
 import { useStore } from 'vuex'
-import { readStudentFile } from '@/utils/ExcelUtils'
+import { readStudentFile, readTeacherFile } from '@/utils/ExcelUtils'
 import { Check } from '@element-plus/icons'
-
-const unselected = defineAsyncComponent(() => import('./Unselected.vue'))
 import ts from './AdminTeachers.vue'
+const unselected = defineAsyncComponent(() => import('./Unselected.vue'))
 
 const store = useStore<State>()
 store.dispatch('checkadmin')
-let user = ref<User>({})
 let students = ref<User[]>([])
-let addUser = () => {
-  store.dispatch('addteacher', {
-    name: user.value.name,
-    number: user.value.number,
-    total: user.value.total,
-  } as User)
-  user.value = {}
-}
-
+let teachers = ref<User[]>([])
+// add teacher
+//let user = ref<User>({})
+// let addUser = () => {
+//   store.dispatch('addteacher', {
+//     name: user.value.name,
+//     number: user.value.number,
+//     total: user.value.total,
+//   } as User)
+//   user.value = {}
+// }
+// read student excel
 let readStu = (event: Event) => {
   const element = event.target as HTMLInputElement
   if (!element || !element.files) {
@@ -122,6 +145,22 @@ let readStu = (event: Event) => {
 let addStudents = () => {
   store.dispatch('addstudents', students.value)
 }
+
+// read teacher excel
+let readTeacher = (event: Event) => {
+  const element = event.target as HTMLInputElement
+  if (!element || !element.files) {
+    return
+  }
+  readTeacherFile(element.files[0]).then((ts: User[]) => {
+    teachers.value = ts
+  })
+}
+
+let addTeachers = () => {
+  store.dispatch('addteachers', teachers.value)
+}
+// set starttime
 let startTime = ref<string>()
 let addStartTime = () => {
   store.state.exception = '日期设置完成'
