@@ -5,16 +5,15 @@
 </template>
 <script lang="ts" setup>
 import { User } from '@/types/type'
-import { State } from '@/store'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { exportExcelFile } from '@/utils/ExcelUtils'
 
 import { Files } from '@element-plus/icons'
 import { onMounted } from 'vue'
 
-const store = useStore<State>()
+const store = useStore()
 let exportE = () => {
-  store.dispatch('allstudents').then((students: User[]) => {
+  store.allstudents().then((students: User[]) => {
     let i = 0
     let result = students.map((s) => {
       return {

@@ -21,19 +21,19 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { User } from '@/types/type'
-import { useStore } from 'vuex'
-import { State } from '@/store'
+import { useStore } from '@/store'
 import { Lock, User as UserIco } from '@element-plus/icons'
-const store = useStore<State>()
+
+const store = useStore()
 let user = ref<User>({})
 
 let login = () => {
   let number = user.value.number
   let password = user.value.password
   if (number == password) {
-    store.state.showResetPassword = true
+    store.showResetPassword = true
   }
-  store.dispatch('login', {
+  store.login({
     number: number,
     password: password,
   })

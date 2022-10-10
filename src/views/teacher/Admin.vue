@@ -111,27 +111,18 @@
 <script lang="ts" setup>
 import { defineAsyncComponent, ref } from 'vue'
 import { User } from '@/types/type'
-import { State } from '@/store'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 import { readStudentFile, readTeacherFile } from '@/utils/ExcelUtils'
 import { Check } from '@element-plus/icons'
 import ts from './AdminTeachers.vue'
 const unselected = defineAsyncComponent(() => import('./Unselected.vue'))
 
-const store = useStore<State>()
-store.dispatch('checkadmin')
+const store = useStore()
+store.checkadmin()
+
 let students = ref<User[]>([])
 let teachers = ref<User[]>([])
-// add teacher
-//let user = ref<User>({})
-// let addUser = () => {
-//   store.dispatch('addteacher', {
-//     name: user.value.name,
-//     number: user.value.number,
-//     total: user.value.total,
-//   } as User)
-//   user.value = {}
-// }
+
 // read student excel
 let readStu = (event: Event) => {
   const element = event.target as HTMLInputElement
@@ -143,7 +134,7 @@ let readStu = (event: Event) => {
   })
 }
 let addStudents = () => {
-  store.dispatch('addstudents', students.value)
+  store.addstudents(students.value)
 }
 
 // read teacher excel
@@ -158,21 +149,21 @@ let readTeacher = (event: Event) => {
 }
 
 let addTeachers = () => {
-  store.dispatch('addteachers', teachers.value)
+  store.addteachers(teachers.value)
 }
 // set starttime
 let startTime = ref<string>()
 let addStartTime = () => {
-  store.state.exception = '日期设置完成'
+  store.exception = '日期设置完成'
   let time = startTime.value
-  store.dispatch('addstarttime', time)
+  time && store.addstarttime(time)
   startTime.value = ''
 }
 
 let number = ref<string>()
 let resetpassword = () => {
   let n = number.value
-  store.dispatch('resetuserpassword', n)
+  n && store.resetuserpassword(n)
   number.value = ''
 }
 </script>

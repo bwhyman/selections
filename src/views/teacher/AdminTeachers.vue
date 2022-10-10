@@ -18,11 +18,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { User } from '@/types/type'
-import { State } from '@/store'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 
-const store = useStore<State>()
-store.dispatch('listteachers')
-let teachers = computed(() => store.state.teachers)
+const store = useStore()
+store.listteachers()
+let teachers = computed(() => store.teachers)
 let count = computed(() => (u: User) => `${u.count}/${u.total}`)
 </script>

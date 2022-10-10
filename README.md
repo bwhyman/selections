@@ -4,7 +4,12 @@
 后端源码：https://github.com/bwhyman/mentor-selection
 
 ### update 
-### 2022.09.16
+#### 2022.10.10
+移植到pinia  
+pinia的vue-demi依赖vue，按cdn引入vue在本地打包时不会转换vue-demi中变量。也许通过cdn引入vue-demi
+
+
+#### 2022.09.16
 追加直接导入导师数据表格  
 处理唯一约束异常  
 

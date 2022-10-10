@@ -14,7 +14,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/': {
-        target: 'http://localhost:8080',
+        target: 'http://114.116.203.165:8855/',
         changeOrigin: true,
       },
     },
@@ -23,12 +23,13 @@ export default defineConfig({
   build: {
     sourcemap: false,
     rollupOptions: {
-      external: ['vue', 'element-plus', 'xlsx'],
+      external: ['vue', 'element-plus', 'xlsx', 'vue-demi'],
       plugins: [
         externalGlobals({
           vue: 'Vue',
           'element-plus': 'ElementPlus',
           xlsx: 'XLSX',
+          'vue-demi': 'VueDemi',
         }),
       ],
     },

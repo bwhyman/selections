@@ -1,137 +1,108 @@
 import axios from '@/axios'
 import { ResultVO, User } from '@/types/type'
-import { MutationTree, ActionTree, createStore } from 'vuex'
 import * as consty from '@/types/Const'
 import router from '@/router'
+import { defineStore } from 'pinia'
 
-export interface State {
-  exception?: string
-  user?: User | null
-  showResetPassword: boolean
-  teachers?: User[]
-  students?: User[]
-  unSelectedStudents?: User[]
-  startTime?: string
-}
-const myState: State = {
-  exception: '',
-  showResetPassword: false,
-}
+export const useStore = defineStore('state', {
+  state: () => ({
+    exception: '',
+    user: {} as User,
+    showResetPassword: false,
+    teachers: [] as User[],
+    students: [] as User[],
+    unSelectedStudents: [] as User[],
+    startTime: '',
+  }),
+  actions: {
+    async login(data: User) {
+      const resp = await axios.post('login', data)
+      const token = resp.headers.token
+      const role = resp.headers.role
+      sessionStorage.setItem('token', token)
+      sessionStorage.setItem('role', role)
 
-const myMutations: MutationTree<State> = {}
+      switch (role) {
+        case consty.STUDENT:
+          router.push('/student/selections')
+          break
+        case consty.TEACHER:
+          router.push('/teacher/students')
+          break
+        case consty.ADMIN:
+          router.push('/admin')
+          break
+      }
+    },
 
-const myActions: ActionTree<State, State> = {
-  login: async (_, data: User) => {
-    const resp = await axios.post('login', data)
-    const token = resp.headers.token
-    const role = resp.headers.role
-    sessionStorage.setItem('token', token)
-    sessionStorage.setItem('role', role)
+    async getInfo() {
+      const resp = await axios.get<ResultVO>('info')
+      this.user = resp.data.data.user
+      this.startTime = resp.data.data.starttime
+    },
 
-    switch (role) {
-      case consty.STUDENT:
-        router.push('/student/selections')
-        break
-      case consty.TEACHER:
-        router.push('/teacher/students')
-        break
-      case consty.ADMIN:
-        router.push('/admin')
-        break
-    }
-  },
-  getInfo: async ({ state }) => {
-    let url = ''
-    const role = sessionStorage.getItem('role')
-    switch (role) {
-      case consty.STUDENT:
-        url = 'info'
-        break
-      case consty.TEACHER:
-        url = 'info'
-        break
-      case consty.ADMIN:
-        url = 'info'
-        break
-    }
-    const resp = await axios.get<ResultVO>(url)
-    state.user = resp.data.data.user
-    state.startTime = resp.data.data.starttime
-  },
-  checkadmin: async () => {
-    await axios.get('admin/checkadmin')
-  },
-  resetpwd: async ({ state }, data) => {
-    await axios.put(`password/${data}`)
-    state.showResetPassword = false
-  },
+    async checkadmin() {
+      await axios.get('admin/checkadmin')
+    },
 
-  listteachers: async ({ state }) => {
-    const resp = await axios.get('teachers')
-    state.teachers = resp.data.data.teachers
-  },
-  resetuserpwd: async ({ state }, tid) => {
-    await axios.put(`admin/password/${tid}`)
-    state.exception = '重置用户密码'
-  },
+    async resetpwd(data: string) {
+      await axios.put(`password/${data}`)
+      this.showResetPassword = false
+    },
 
-  // addteacher: async ({ state }, user: User) => {
-  //   const resp = await axios.post<ResultVO>('admin/teachers', user)
-  //   state.teachers = resp.data.data.teachers
-  // },
+    async listteachers() {
+      const resp = await axios.get('teachers')
+      this.teachers = resp.data.data.teachers
+    },
 
-  selection: async ({ state, dispatch }, tid: string) => {
-    await axios
-      .put<ResultVO>(`teachers/${tid}`)
-      .then((resp) => {
-        state.user = resp.data.data.user
-      })
-      .catch(() => {
-        dispatch('listteachers')
-      })
-  },
+    async resetuserpwd(tid: string) {
+      await axios.put(`admin/password/${tid}`)
+      this.exception = '重置用户密码'
+    },
 
-  listteacherstudents: async ({ state }) => {
-    const resp = await axios.get<ResultVO>(`teacher/students`)
-    state.students = resp.data.data.students
-  },
+    async selection(tid: string) {
+      await axios
+        .put<ResultVO>(`teachers/${tid}`)
+        .then((resp) => {
+          this.user = resp.data.data.user
+        })
+        .catch(() => {
+          this.listteachers()
+        })
+    },
 
-  // 教师添加内定学生，已取消
-  // selectstudent: async ({ state }, student: User) => {
-  //   const resp = await axios.post<ResultVO>("/teacher/students", student);
-  //   state.students = resp.data.data.students;
-  //   state.user = resp.data.data.teacher;
-  // },
+    async listteacherstudents() {
+      const resp = await axios.get<ResultVO>(`teacher/students`)
+      this.students = resp.data.data.students
+    },
 
-  addstudents: async (_, students: User[]) => {
-    await axios.post<ResultVO>('admin/students', students)
-  },
+    async addstudents(students: User[]) {
+      await axios.post<ResultVO>('admin/students', students)
+    },
 
-  addteachers: async ({ state }, teachers: User[]) => {
-    const resp = await axios.post<ResultVO>('admin/teachers', teachers)
-    state.teachers = resp.data.data.teachers
-  },
+    async addteachers(teachers: User[]) {
+      const resp = await axios.post<ResultVO>('admin/teachers', teachers)
+      this.teachers = resp.data.data.teachers
+    },
 
-  listunselected: async ({ state }) => {
-    const resp = await axios.get<ResultVO>('teacher/unselected')
-    state.unSelectedStudents = resp.data.data.students
+    async listunselected() {
+      const resp = await axios.get<ResultVO>('teacher/unselected')
+      this.unSelectedStudents = resp.data.data.students
+    },
+
+    async addstarttime(time: string) {
+      const resp = await axios.put<ResultVO>(`admin/starttime/${time}`)
+      this.startTime = resp.data.data.time
+    },
+
+    async resetuserpassword(number: string) {
+      await axios.put<ResultVO>(`admin/password/${number}`)
+      this.exception = '重置用户密码'
+    },
+
+    async allstudents() {
+      const resp = await axios.get<ResultVO>('teacher/allstudents')
+      return Promise.resolve(resp.data.data.students)
+    },
   },
-  addstarttime: async ({ state }, time: string) => {
-    const resp = await axios.put<ResultVO>(`admin/starttime/${time}`)
-    state.startTime = resp.data.data.time
-  },
-  resetuserpassword: async ({ state }, number: string) => {
-    await axios.put<ResultVO>(`admin/password/${number}`)
-    state.exception = '重置用户密码'
-  },
-  allstudents: async () => {
-    const resp = await axios.get<ResultVO>('teacher/allstudents')
-    return Promise.resolve(resp.data.data.students)
-  },
-}
-export default createStore({
-  state: myState,
-  mutations: myMutations,
-  actions: myActions,
-  modules: {},
 })

@@ -28,16 +28,15 @@
   <teacherlist v-if="selected == 'list'" />
 </template>
 <script lang="ts" setup>
-import { State } from '@/store'
+import { useStore } from '@/store'
 import { computed, defineAsyncComponent, ref, watch } from 'vue'
-import { useStore } from 'vuex'
 const teacherlist = defineAsyncComponent(
   () => import('@/views/student/SelectionList.vue')
 )
 
-const store = useStore<State>()
+const store = useStore()
 let selected = ref('')
-let user = computed(() => store.state.user)
+let user = computed(() => store.user)
 watch(user, () => {
   if (user.value?.teacherName && user.value?.teacherName?.length > 0) {
     selected.value = 'teacher'

@@ -16,5 +16,6 @@
   "emmet.includeLanguages": {
     "vue-html": "html",
     "vue": "html"
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

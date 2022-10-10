@@ -26,19 +26,18 @@
   </el-row>
 </template>
 <script lang="ts" setup>
-import { State } from '@/store'
+import { useStore } from '@/store'
 import { computed } from 'vue'
-import { useStore } from 'vuex'
 import exporte from './ExportExcel.vue'
 import { Search } from '@element-plus/icons'
 
-const store = useStore<State>()
-let students = computed(() => store.state.unSelectedStudents)
+const store = useStore()
+let students = computed(() => store.unSelectedStudents)
 let startTime = computed(() => {
-  let t = store.state.startTime?.replace('T', ' ')
+  let t = store.startTime?.replace('T', ' ')
   return `开始时间：${t}`
 })
 let listStudents = () => {
-  store.dispatch('listunselected')
+  store.listunselected()
 }
 </script>

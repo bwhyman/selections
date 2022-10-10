@@ -52,15 +52,14 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { State } from '@/store'
 import { User } from '@/types/type'
 import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '@/store'
 
-const store = useStore<State>()
-store.dispatch('listteachers')
+const store = useStore()
+store.listteachers()
 let centerDialogVisible = ref(false)
-let teachers = computed(() => store.state.teachers)
+let teachers = computed(() => store.teachers)
 let selectTeacher = ref<User>({})
 
 let select = (user: User) => {
@@ -70,6 +69,6 @@ let select = (user: User) => {
 
 let confirm = () => {
   centerDialogVisible.value = false
-  store.dispatch('selection', selectTeacher.value.id)
+  selectTeacher.value.id && store.selection(selectTeacher.value.id)
 }
 </script>

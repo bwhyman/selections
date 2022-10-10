@@ -50,24 +50,14 @@
   </el-row>
 </template>
 <script lang="ts" setup>
-import { State } from '@/store'
+import { useStore } from '@/store'
 import { User } from '@/types/type'
-import { computed, ref, defineAsyncComponent } from 'vue'
-import { useStore } from 'vuex'
+import { computed, defineAsyncComponent } from 'vue'
 const unselected = defineAsyncComponent(() => import('./Unselected.vue'))
-const store = useStore<State>()
-store.dispatch('listteacherstudents')
-let user = computed(() => store.state.user)
-let students = computed(() => store.state.students)
-let dateC = computed(() => (u: User) => u.selectTime?.replace('T', ' '))
 
-let student = ref<User>({})
-let selectStudent = () => {
-  store.dispatch('selectstudent', {
-    name: student.value.name,
-    number: student.value.number,
-  } as User)
-  store.state.exception = '学生已录入'
-  student.value = {}
-}
+const store = useStore()
+store.listteacherstudents()
+let user = computed(() => store.user)
+let students = computed(() => store.students)
+let dateC = computed(() => (u: User) => u.selectTime?.replace('T', ' '))
 </script>

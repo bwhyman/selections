@@ -18,26 +18,26 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { State } from '@/store'
+import { useStore } from '@/store'
 import { ref } from 'vue'
-import { useStore } from 'vuex'
 import { Lock } from '@element-plus/icons'
-const store = useStore<State>()
+
+const store = useStore()
 let pwdM = ref({ p1: '', p2: '' })
 
 let showD = ref(true)
 
 let resetPwd = () => {
   if (!(pwdM.value.p1 == pwdM.value.p2)) {
-    store.state.exception = '2次输入密码不同'
+    store.exception = '2次输入密码不同'
     return
   }
-  store.dispatch('resetpwd', pwdM.value.p1)
+  store.resetpwd(pwdM.value.p1)
   pwdM.value.p1 = ''
   pwdM.value.p2 = ''
-  store.state.showResetPassword = false
+  store.showResetPassword = false
 }
 let close = () => {
-  store.state.showResetPassword = false
+  store.showResetPassword = false
 }
 </script>

@@ -36,18 +36,17 @@
   <reset v-if="resetpassword" />
 </template>
 <script lang="ts" setup>
-import { State } from '@/store'
+import { useStore } from '@/store'
 import { computed, defineAsyncComponent, ref } from 'vue'
-import { useStore } from 'vuex'
 import { Setting, Lock, Delete } from '@element-plus/icons'
 const reset = defineAsyncComponent(() => import('./ResetPassword.vue'))
-const store = useStore<State>()
+const store = useStore()
 
-let resetpassword = computed(() => store.state.showResetPassword)
+let resetpassword = computed(() => store.showResetPassword)
 
-let user = computed(() => store.state.user)
+let user = computed(() => store.user)
 
-store.dispatch('getInfo')
+store.getInfo()
 let logout = () => {
   sessionStorage.clear()
   window.location.href = '/'
@@ -56,6 +55,6 @@ let logout = () => {
 let showSetting = ref(false)
 let shwoResetPassword = () => {
   showSetting.value = false
-  store.state.showResetPassword = true
+  store.showResetPassword = true
 }
 </script>
