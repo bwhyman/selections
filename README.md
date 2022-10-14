@@ -4,6 +4,9 @@
 后端源码：https://github.com/bwhyman/mentor-selection
 
 ### update 
+#### 2022.10.15
+支持基于github actions的持续部署。项目太简单，没有使用生成镜像容器的方式，在CI服务器构建编译后，直接将结果复制到服务器nginx容器中。
+
 #### 2022.10.10
 移植到pinia  
 pinia的vue-demi依赖vue，按cdn引入vue在本地打包时不会转换vue-demi中变量。也许通过cdn引入vue-demi

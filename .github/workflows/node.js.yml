@@ -8,6 +8,8 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+env: 
+  path: /home/BO/services/mentor/nginx/html/
 
 jobs:
   build:
@@ -26,14 +28,17 @@ jobs:
         host: ${{ secrets.host }}
         username: ${{ secrets.username }}
         password: ${{ secrets.pwd }}
-        script: rm -rf /home/BO/services/mentor/nginx/html/*
+        envs: path
+        script: rm -rf ${{ env.path }}*
     - name: copy file
-      uses: appleboy/ssh-action@master
+      uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.host }}
         username: ${{ secrets.username }}
         password: ${{ secrets.pwd }}
         source: "dist/"
-        target: "/home/BO/services/mentor/nginx/html/"
+        envs: path
+        target: ${{ env.path }}
+        strip_components: 1
 
 
