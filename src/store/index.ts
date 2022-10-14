@@ -24,10 +24,10 @@ export const useStore = defineStore('state', {
 
       switch (role) {
         case consty.STUDENT:
-          router.push('/student/selections')
+          router.push('/student')
           break
         case consty.TEACHER:
-          router.push('/teacher/students')
+          router.push('/teacher')
           break
         case consty.ADMIN:
           router.push('/admin')
@@ -60,8 +60,8 @@ export const useStore = defineStore('state', {
       this.exception = '重置用户密码'
     },
 
-    async selection(tid: string) {
-      await axios
+    selection(tid: string) {
+      axios
         .put<ResultVO>(`teachers/${tid}`)
         .then((resp) => {
           this.user = resp.data.data.user

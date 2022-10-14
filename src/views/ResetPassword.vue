@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="showD" title="Reset Password" @close="close">
+  <el-dialog v-model="showD" title="建议修改默认密码" @close="close">
     <div style="margin-bottom: 15px">
       <el-input
         type="password"

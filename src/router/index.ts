@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: { role: consty.STUDENT },
     children: [
       {
-        path: 'student/selections',
+        path: 'student',
         component: () => import('@/views/student/Selection.vue'),
         meta: { role: consty.STUDENT },
       },
@@ -23,19 +23,12 @@ const routes: Array<RouteRecordRaw> = [
         meta: { role: consty.ADMIN },
       },
       {
-        path: 'teacher/students',
+        path: 'teacher',
         component: () => import('@/views/teacher/Teacher.vue'),
         meta: { role: consty.TEACHER },
       },
     ],
   },
-
-  {
-    path: '/admin',
-    component: () => import('@/views/teacher/Admin.vue'),
-    meta: { role: consty.ADMIN },
-  },
-
   {
     name: 'nomatch',
     path: '/:pathMatch(.*)*',
